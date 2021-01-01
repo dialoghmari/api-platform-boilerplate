@@ -5,12 +5,25 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\Api\Task\TaskCreateController;
 
 use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     denormalizationContext = { "groups" = { "task:write" } },
- *     normalizationContext =   { "groups" = { "task:read"  } }
+ *     normalizationContext =   { "groups" = { "task:read"  } },
+ *     collectionOperations = {
+ *         "get" = {
+ *             "security" = "is_granted('ROLE_USER')",
+ *             "security_message" = "Only users can list tasks",
+ *         },
+ *         "post" = {
+ *             "security" = "is_granted('ROLE_USER')",
+ *             "security_message" = "Only users can create a task",
+ *              "denormalizationContext"={"groups"={"task:write"}},
+ *              "controller"=TaskCreateController::class
+ *         }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=TaskRepository::class)
  */
