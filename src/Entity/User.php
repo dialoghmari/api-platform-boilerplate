@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -26,12 +27,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user:write"})
+     * @Groups({"user:write", "admin:read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"admin:write", "admin:read"})
      */
     private $roles = [];
 
@@ -54,9 +56,16 @@ class User implements UserInterface
      */
     private $birthdate;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"admin:read"})
+     */
+    private $createdAt;
+
 
     public function __construct() {
         $this->roles = ['ROLE_USER'];
+        $this->createdAt = new DateTime();
     }
 
     public function getId(): ?int
@@ -157,6 +166,18 @@ class User implements UserInterface
     public function setBirthdate(?\DateTimeInterface $birthdate): self
     {
         $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
