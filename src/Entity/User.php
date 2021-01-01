@@ -10,8 +10,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ApiResource(
- *     normalizationContext={"groups"={"user", "user:read"}},
- *     denormalizationContext={"groups"={"user", "user:write"}}
+ *     normalizationContext   = {"groups"={"user:read"}},
+ *     denormalizationContext = {"groups"={"user:write"}}
  * )
  */
 class User implements UserInterface
@@ -20,7 +20,7 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "task:read", "task:write"})
      */
     private $id;
 
@@ -44,13 +44,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user"})
+     * @Groups({"user:read", "user:write", "task:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"user"})
+     * @Groups({"user:read", "user:write"})
      */
     private $birthdate;
 
